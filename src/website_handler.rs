@@ -23,10 +23,14 @@ impl Handler for WebSiteHandler {
             match request.method() {
                 Method::GET => match request.path() {
                     "/" => Response::new(StatusCode::Ok, self.read_file("index.html")),
-                    "/ahoy" => Response::new(StatusCode::Ok, Some("<h1>Ahoy there!</h1>".to_string())),
-                    "/home" => Response::new(StatusCode::Ok, Some("<h1>Welcome home!</h1>".to_string())),
-                    _ =>Response::new(StatusCode::NotFound, None),
-                }
+                    "/ahoy" => Response::new(StatusCode::Ok, Some("<h1>Ahoy there!<h1>".to_string())),
+                    "/hello" => Response::new(StatusCode::Ok, self.read_file("hello.html")),
+                   path => match self.read_file(path) {
+                       Some(contents) => Response::new(StatusCode::Ok, Some(contents)),
+                       None => Response::new(StatusCode::NotFound, None)
+                   },
+                    
+                },
                 _ =>Response::new(StatusCode::NotFound, None),
             }
     }
